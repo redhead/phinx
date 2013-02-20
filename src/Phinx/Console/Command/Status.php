@@ -22,7 +22,7 @@ class Status extends AbstractCommand
              ->setHelp(<<<EOT
 The <info>status</info> command prints a list of all migrations, along with their current status
 
-<info>phinx status -e development</info>
+<info>phinx status</info>
 EOT
         );         
     }

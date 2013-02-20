@@ -23,8 +23,8 @@ class Rollback extends AbstractCommand
              ->setHelp(<<<EOT
 The <info>rollback</info> command reverts the last migration, or optionally up to a specific version
 
-<info>phinx rollback -e development</info>
-<info>phinx rollback -e development -t 20111018185412</info>
+<info>phinx rollback</info>
+<info>phinx rollback -t 20111018185412</info>
 
 EOT
         );

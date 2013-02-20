@@ -23,8 +23,8 @@ class Migrate extends AbstractCommand
               ->setHelp(<<<EOT
 The <info>migrate</info> command runs all available migrations, optionally up to a specific version
 
-<info>phinx migrate -e development</info>
-<info>phinx migrate -e development -t 20110103081132</info>
+<info>phinx migrate</info>
+<info>phinx migrate -t 20110103081132</info>
 
 EOT
               );

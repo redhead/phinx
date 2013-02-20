@@ -1,6 +1,8 @@
 <?php
 
-class Config extends \Phinx\Config\Config {
+namespace Phinx\Config;
+
+class NetteConfig extends \Phinx\Config\Config {
 
     protected $container;
 
@@ -11,8 +13,7 @@ class Config extends \Phinx\Config\Config {
 
 
     public static function fromContainer(\Nette\DI\Container $container) {
-        $container->getByType('Environment');
-        return new Config($container);
+        return new NetteConfig($container);
     }
 
 

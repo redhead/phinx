@@ -38,7 +38,7 @@ abstract class AbstractCommand extends Command
      */
     protected function configure()
     {
-        $this->addOption('--configuration', '-c', InputArgument::OPTIONAL, 'The configuration file to load');
+        $this->addOption('--container', '-c', InputArgument::OPTIONAL, 'The PHP file to load the container');
     }
     
     /**
@@ -121,32 +121,6 @@ abstract class AbstractCommand extends Command
     }
 
     /**
-     * Returns config file path
-     *
-     * @param \Symfony\Component\Console\Input\InputInterface $input
-     * @return string
-     */
-    protected function locateConfigFile(InputInterface $input)
-    {
-        $configFile = $input->getOption('configuration');
-
-        if (null === $configFile) {
-            $configFile = 'phinx.yml';
-        }
-
-        $cwd = getcwd();
-
-        // locate the phinx config file (default: phinx.yml)
-        // TODO - In future walk the tree in reverse (max 10 levels)
-        $locator = new FileLocator(array(
-            $cwd . DIRECTORY_SEPARATOR
-        ));
-
-        // Locate() throws an exception if the file does not exist
-        return $locator->locate($configFile, $cwd, $first = true);
-    }
-
-    /**
      * Parse the config file and load it into the config object
      *
      * @param \Symfony\Component\Console\Input\InputInterface   $input
@@ -154,16 +128,22 @@ abstract class AbstractCommand extends Command
      * @return void
      */
     protected function loadConfig(InputInterface $input, OutputInterface $output) {
-        $bootstrapFile = $input->getOption('config');
+        $bootstrapFile = $input->getOption('container');
 
         if($bootstrapFile === null) {
-            $bootstrapFile = getcwd() . '/app/bootstrap.php';
+            $bootstrapFile = realpath(getcwd() . '/app/bootstrap.php');
+        }
+        if(!is_file($bootstrapFile)) {
+            $bootstrapFile = realpath(getcwd() . '/../../app/bootstrap.php');
+        }
+        if(!is_file($bootstrapFile)) {
+            throw new \InvalidArgumentException("Can't find the container file");
         }
 
-        $container = LimitedScope::load($bootstrapFile);
-
-        $output->writeln('<info>using container</info> .' . str_replace(getcwd(), '', $bootstrapFile));
-        $this->setConfig(NetteConfig::fromContainer($container));
+        $container = \Nette\Utils\LimitedScope::load($bootstrapFile);
+        
+        $output->writeln('<info>using container</info> ' . str_replace(getcwd(), '', $bootstrapFile));
+        $this->setConfig(\Phinx\Config\NetteConfig::fromContainer($container));
     }
 
     /**

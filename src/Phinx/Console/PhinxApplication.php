@@ -54,7 +54,6 @@ class PhinxApplication extends Application
     {
         parent::__construct('Phinx by Rob Morgan.', $version);
 
-        $this->add(new Command\Init());
         $this->add(new Command\Create());
         $this->add(new Command\Migrate());
         $this->add(new Command\Rollback());
