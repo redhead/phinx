@@ -17,8 +17,6 @@ class Status extends AbstractCommand
     {
         parent::configure();
          
-        $this->addOption('--environment', '-e', InputArgument::OPTIONAL, 'The target environment');
-         
         $this->setName('status')
              ->setDescription('Show migration status')
              ->setHelp(<<<EOT
@@ -38,14 +36,7 @@ EOT
     {
         $this->bootstrap($input, $output);
         
-        $environment = $input->getOption('environment');
-        
-        if (null === $environment) {
-            $environment = $this->getConfig()->getDefaultEnvironment();
-            $output->writeln('<comment>warning</comment> no environment specified, defaulting to: ' . $environment);
-        } else {
-            $output->writeln('<info>using environment</info> ' . $environment);
-        }
+        $environment = $this->getConfig()->getDefaultEnvironment();
         
         // print the status
         $this->getManager()->printStatus($environment);

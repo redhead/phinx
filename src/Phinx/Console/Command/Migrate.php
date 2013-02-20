@@ -17,8 +17,6 @@ class Migrate extends AbstractCommand
      {
          parent::configure();
          
-         $this->addOption('--environment', '-e', InputArgument::OPTIONAL, 'The target environment');
-         
          $this->setName('migrate')
               ->setDescription('Migrate the database')
               ->addOption('--target', '-t', InputArgument::OPTIONAL, 'The version number to migrate to')
@@ -42,14 +40,7 @@ EOT
         $this->bootstrap($input, $output);
         
         $version = $input->getOption('target');
-        $environment = $input->getOption('environment');
-        
-        if (null === $environment) {
-            $environment = $this->getConfig()->getDefaultEnvironment();
-            $output->writeln('<comment>warning</comment> no environment specified, defaulting to: ' . $environment);
-        } else {
-            $output->writeln('<info>using environment</info> ' . $environment);
-        }
+        $environment = $this->getConfig()->getDefaultEnvironment();
         
         $envOptions = $this->getConfig()->getEnvironment($environment);
         $output->writeln('<info>using adapter</info> ' . $envOptions['adapter']);

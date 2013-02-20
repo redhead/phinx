@@ -153,11 +153,17 @@ abstract class AbstractCommand extends Command
      * @param \Symfony\Component\Console\Output\OutputInterface $output
      * @return void
      */
-    protected function loadConfig(InputInterface $input, OutputInterface $output)
-    {
-        $configFilePath = $this->locateConfigFile($input);
-        $output->writeln('<info>using config</info> .' . str_replace(getcwd(), '', realpath($configFilePath)));
-        $this->setConfig(Config::fromYaml($configFilePath));
+    protected function loadConfig(InputInterface $input, OutputInterface $output) {
+        $bootstrapFile = $input->getOption('config');
+
+        if($bootstrapFile === null) {
+            $bootstrapFile = getcwd() . '/app/bootstrap.php';
+        }
+
+        $container = LimitedScope::load($bootstrapFile);
+
+        $output->writeln('<info>using container</info> .' . str_replace(getcwd(), '', $bootstrapFile));
+        $this->setConfig(NetteConfig::fromContainer($container));
     }
 
     /**

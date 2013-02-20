@@ -12,3 +12,4 @@ tests/TestConfiguration.php
 docs/_build
 vendor
 migrations
+nbproject

@@ -17,8 +17,6 @@ class Rollback extends AbstractCommand
     {
         parent::configure();
          
-        $this->addOption('--environment', '-e', InputArgument::OPTIONAL, 'The target environment');
-                  
         $this->setName('rollback')
              ->setDescription('Rollback the last or to a specific migration')
              ->addOption('--target', '-t', InputArgument::OPTIONAL, 'The version number to rollback to')
@@ -41,15 +39,8 @@ EOT
     {
         $this->bootstrap($input, $output);
         
-        $environment = $input->getOption('environment');
         $version = $input->getOption('target');
-        
-        if (null === $environment) {
-            $environment = $this->getConfig()->getDefaultEnvironment();
-            $output->writeln('<comment>warning</comment> no environment specified, defaulting to: ' . $environment);
-        } else {
-            $output->writeln('<info>using environment</info> ' . $environment);
-        }
+        $environment = $this->getConfig()->getDefaultEnvironment();
         
         // rollback the specified environment
         $this->getManager()->rollback($environment, $version);
